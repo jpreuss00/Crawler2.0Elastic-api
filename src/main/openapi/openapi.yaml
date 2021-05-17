@@ -1,0 +1,155 @@
+openapi: 3.0.1
+info:
+  title: Crawler API
+  version: "1.0"
+servers:
+- url: https://localhost.com:9200/
+paths:
+  /addArticles:
+    post:
+      description: Save an Article
+      requestBody:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Article'
+      responses:
+          200:
+            description: Sucessfully saved an Article
+            content:
+              '*/*':
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Article'
+          400:
+            description: Bad Request
+            content:
+              '*/*':
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+          500:
+            description: Internal Server Error
+            content:
+              '*/*':
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    
+  /getArticles:
+    get:
+      description: Returns an Array of Articles
+      responses:
+        200:
+          description: Sucessfully returned an Array of Articles
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Article'
+        400:
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        500:
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    
+  /getArticlesByCategory:
+    get:
+      description: Returns an Array of Articles filtered by Category
+      responses:
+        200:
+          description: Sucessfully returned an filtered Array of Articles
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Article'
+        400:
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        500:
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    
+  /getArticlesByTerm:
+    get:
+      description: Returns an Array of Articles filtered by Term
+      responses:
+        200:
+          description: Sucessfully returned an filtered Array of Articles
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Article'
+        400:
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        500:
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+components:
+  schemas:
+    Article:
+      required:
+      - guid
+      type: object
+      properties:
+        title:
+          type: string
+        category:
+          type: string
+        guid:
+          type: integer
+        pubDate:
+          type: string
+        description:
+          type: string
+        link:
+          type: string
