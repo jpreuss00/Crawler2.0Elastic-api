@@ -3,10 +3,11 @@ info:
   title: Crawler API
   version: "1.0"
 servers:
-- url: https://localhost.com:9200/
+- url: https://localhost.com:8080/
 paths:
-  /addArticles:
+  /crawler/addArticle:
     post:
+      operationId: addArticle
       description: Save an Article
       requestBody:
           content:
@@ -17,15 +18,13 @@ paths:
           200:
             description: Sucessfully saved an Article
             content:
-              '*/*':
+              'application/json':
                 schema:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/Article'
+                  $ref: '#/components/schemas/Article'
           400:
             description: Bad Request
             content:
-              '*/*':
+              'application/json':
                 schema:
                   type: object
                   properties:
@@ -34,21 +33,22 @@ paths:
           500:
             description: Internal Server Error
             content:
-              '*/*':
+              'application/json':
                 schema:
                   type: object
                   properties:
                     message:
                       type: string
                     
-  /getArticles:
+  /crawler/getArticles:
     get:
+      operationId: getArticles
       description: Returns an Array of Articles
       responses:
         200:
           description: Sucessfully returned an Array of Articles
           content:
-            '*/*':
+            'application/json':
               schema:
                 type: array
                 items:
@@ -56,7 +56,7 @@ paths:
         400:
           description: Bad Request
           content:
-            '*/*':
+            'application/json':
               schema:
                 type: object
                 properties:
@@ -65,21 +65,27 @@ paths:
         500:
           description: Internal Server Error
           content:
-            '*/*':
+            'application/json':
               schema:
                 type: object
                 properties:
                   message:
                     type: string
                     
-  /getArticlesByCategory:
+  /crawler/getArticlesByCategory:
     get:
+      operationId: getArticlesByCategory
       description: Returns an Array of Articles filtered by Category
+      parameters:
+        - in: query
+          name: category
+          schema:
+            type: string
       responses:
         200:
           description: Sucessfully returned an filtered Array of Articles
           content:
-            '*/*':
+            'application/json':
               schema:
                 type: array
                 items:
@@ -87,7 +93,7 @@ paths:
         400:
           description: Bad Request
           content:
-            '*/*':
+            'application/json':
               schema:
                 type: object
                 properties:
@@ -96,21 +102,27 @@ paths:
         500:
           description: Internal Server Error
           content:
-            '*/*':
+            'application/json':
               schema:
                 type: object
                 properties:
                   message:
                     type: string
                     
-  /getArticlesByTerm:
+  /crawler/getArticlesByTerm:
     get:
+      operationId: getArticlesByTerm
       description: Returns an Array of Articles filtered by Term
+      parameters:
+        - in: query
+          name: term
+          schema:
+            type: string
       responses:
         200:
           description: Sucessfully returned an filtered Array of Articles
           content:
-            '*/*':
+            'application/json':
               schema:
                 type: array
                 items:
@@ -118,7 +130,7 @@ paths:
         400:
           description: Bad Request
           content:
-            '*/*':
+            'application/json':
               schema:
                 type: object
                 properties:
@@ -127,7 +139,7 @@ paths:
         500:
           description: Internal Server Error
           content:
-            '*/*':
+            'application/json':
               schema:
                 type: object
                 properties:

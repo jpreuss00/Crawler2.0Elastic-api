@@ -1,8 +1,8 @@
 lazy val root = (project in file(".")).
   settings(
-    organization := "org.example",
-    name := "crawler2.0Elastic-api",
-    version := "1.0-SNAPSHOT",
+    organization := "com.example",
+    name := "crawler2.0Elastic-api-client",
+    version := "1.1-SNAPSHOT",
     scalaVersion := "2.11.4",
     scalacOptions ++= Seq("-feature"),
     javacOptions in compile ++= Seq("-Xlint:deprecation"),

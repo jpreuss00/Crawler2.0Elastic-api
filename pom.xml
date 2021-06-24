@@ -4,18 +4,20 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-
-    <groupId>org.example</groupId>
+    <groupId>com.example</groupId>
     <artifactId>crawler2.0Elastic-api</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.1-SNAPSHOT</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>11</java.version>
-        <springfox.version>2.9.2</springfox.version>
+        <springfox.version>3.0.0</springfox.version>
         <openapi.generator.version>4.1.0</openapi.generator.version>
+        <kotlin.version>1.5.20-RC</kotlin.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
     </properties>
 
     <dependencies>
@@ -29,6 +31,21 @@
             <artifactId>springfox-swagger-ui</artifactId>
             <version>${springfox.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib-jdk8</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+            <version>2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.inject</groupId>
+            <artifactId>jersey-hk2</artifactId>
+            <version>2.26</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -41,7 +58,9 @@
         </resources>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
+                <version>3.2.0</version>
                 <executions>
                     <execution>
                         <phase>generate-sources</phase>
@@ -63,6 +82,19 @@
                 <version>${openapi.generator.version}</version>
                 <executions>
                     <execution>
+                        <id>generate-spring-server</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.build.directory}/openapi/openapi.yaml</inputSpec>
+                            <generatorName>spring</generatorName>
+                            <configurationFile>${project.build.directory}/openapi/spring-server-config.json</configurationFile>
+                            <output>${project.build.directory}/openapi-spring-server</output>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>generate-openapi-java-client</id>
                         <phase>process-sources</phase>
                         <goals>
@@ -73,6 +105,79 @@
                             <generatorName>java</generatorName>
                             <configurationFile>${project.build.directory}/openapi/java-client-config.json</configurationFile>
                             <output>${project.build.directory}/openapi-java-client</output>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>build-spring-server</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>mvn</executable>
+                            <workingDirectory>${project.build.directory}/openapi-spring-server</workingDirectory>
+                            <arguments>
+                                <argument>package</argument>
+                                <argument>-Dmaven.javadoc.skip=true</argument>
+                                <argument>-Dmaven.test.skip=true</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-spring-server</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>mvn</executable>
+                            <workingDirectory>${project.build.directory}/openapi-spring-server</workingDirectory>
+                            <arguments>
+                                <argument>source:jar</argument>
+                                <argument>install</argument>
+                                <argument>-Dmaven.javadoc.skip=true</argument>
+                                <argument>-Dmaven.test.skip=true</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>build-java-client</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>mvn</executable>
+                            <workingDirectory>${project.build.directory}/openapi-java-client</workingDirectory>
+                            <arguments>
+                                <argument>package</argument>
+                                <argument>-Dmaven.javadoc.skip=true</argument>
+                                <argument>-Dmaven.test.skip=true</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-java-client</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>mvn</executable>
+                            <workingDirectory>${project.build.directory}/openapi-java-client</workingDirectory>
+                            <arguments>
+                                <argument>source:jar</argument>
+                                <argument>install</argument>
+                                <argument>-Dmaven.javadoc.skip=true</argument>
+                                <argument>-Dmaven.test.skip=true</argument>
+                            </arguments>
                         </configuration>
                     </execution>
                 </executions>

@@ -1,0 +1,13 @@
+{
+  "apiPackage": "com.example.crawler.server.api",
+  "modelPackage": "com.example.crawler.server.model",
+  "configPackage": "com.example.crawler.server.configuration",
+  "invokerPackage": "com.example.crawler.server.invoker",
+  "basePackage": "com.example.crawler.server.api",
+  "java8": true,
+  "dateLibrary": "java8",
+  "groupId":"com.example",
+  "artifactId":"crawler2.0Elastic-api-server",
+  "artifactVersion":"1.1-SNAPSHOT",
+  "interfaceOnly": true
+}
